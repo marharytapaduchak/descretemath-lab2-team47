@@ -4,26 +4,125 @@ Lab 2
 
 def read_incidence_matrix(filename: str) -> list[list]:
     """
-    :param str filename: path to file
-    :returns list[list]: the incidence matrix of a given graph
-    """
-    pass
+    A function that takes in a name of file, returns a list of lists,
+    which show the rows of a digraph incidence matrix
 
+    :param str filename: The name of the file 
+    :returns list[list]: the incidence matrix of a given graph
+
+    >>> import tempfile
+    >>> import os
+    >>> with tempfile.NamedTemporaryFile(mode='w', delete=False, encoding='utf-8') as tmp:
+    ...     _ = tmp.write(\
+    "digraph sample_input {\\n\
+    0 -> 1;\\n\
+    0 -> 2;\\n\
+    1 -> 0;\\n\
+    1 -> 2;\\n\
+    2 -> 0;\\n\
+    2 -> 1;\\n\
+    }"\
+    )
+    ...     tmp_path = tmp.name
+    >>> read_incidence_matrix(tmp_path)
+    [[-1, -1, 1, 0, 1, 0], [1, 0, -1, -1, 0, 1], [0, 1, 0, 1, -1, -1]]
+    >>> os.remove(tmp_path)
+    """
+
+    with open(filename, 'r', encoding='utf-8') as f:
+        edges = [tuple(map(int, line.replace(';', '').split('->'))) for line in f if '->' in line]
+
+    vertices = sorted({v for edge in edges for v in edge})
+
+    vertex_indices = {v: i for i, v in enumerate(vertices)}
+    incidence_matrix = [[0] * len(edges) for _ in vertices]
+
+    for edge_index, (u, v) in enumerate(edges):
+        if u == v:
+            # loop
+            incidence_matrix[vertex_indices[u]][edge_index] = 2
+        else:
+            # out
+            incidence_matrix[vertex_indices[u]][edge_index] = -1
+            # in
+            incidence_matrix[vertex_indices[v]][edge_index] = 1
+
+    return incidence_matrix
 
 def read_adjacency_matrix(filename: str) -> list[list]:
     """
-    :param str filename: path to file
-    :returns list[list]: the adjacency matrix of a given graph
-    """
-    pass
+    Makes an adjacency graph into a list of lists, where they represent
+    rows,
 
+    :param str filename: The name of the file 
+    :returns list[list]: the adjacency matrix of a given graph
+
+    
+    >>> import tempfile
+    >>> import os
+    >>> with tempfile.NamedTemporaryFile(mode='w', delete=False, encoding='utf-8') as tmp:
+    ...     _ = tmp.write(\
+    "digraph sample_input {\\n\
+    0 -> 1;\\n\
+    0 -> 2;\\n\
+    1 -> 0;\\n\
+    1 -> 2;\\n\
+    2 -> 0;\\n\
+    2 -> 1;\\n\
+    }"\
+    )
+    ...     tmp_path = tmp.name
+    >>> read_adjacency_matrix(tmp_path)
+    [[0, 1, 1], [1, 0, 1], [1, 1, 0]]
+    >>> os.remove(tmp_path)
+    """
+    with open(filename, 'r', encoding='utf-8') as f:
+        edges = [tuple(map(int, line.replace(';', '').split('->'))) for line in f if '->' in line]
+
+    vertices = sorted({v for edge in edges for v in edge})
+    n = len(vertices)
+    adjacency_matrix = [[0] * n for _ in range(n)]
+
+    for u, v in edges:
+        adjacency_matrix[u][v] = 1
+
+    return adjacency_matrix
 
 def read_adjacency_dict(filename: str) -> dict[int, list[int]]:
     """
-    :param str filename: path to file
-    :returns dict: the adjacency dict of a given graph
+    Makes a dictionary as a simple adjacency dictinoary, where the key is a vertice,
+    and the values are the edges that the vertice is connected to
+
+    :param str filename: The name of the file
+    :returns dict: Adjacency dictionary of a given graph
+
+    >>> import tempfile
+    >>> import os
+    >>> with tempfile.NamedTemporaryFile(mode='w', delete=False, encoding='utf-8') as tmp:
+    ...     _ = tmp.write(\
+    "digraph sample_input {\\n\
+    0 -> 1;\\n\
+    0 -> 2;\\n\
+    1 -> 0;\\n\
+    1 -> 2;\\n\
+    2 -> 0;\\n\
+    2 -> 1;\\n\
+    }"\
+    )
+    ...     tmp_path = tmp.name
+    >>> read_adjacency_dict(tmp_path)
+    {0: [1, 2], 1: [0, 2], 2: [0, 1]}
+    >>> os.remove(tmp_path)
+    
     """
-    pass
+    with open(filename, 'r', encoding='utf-8') as f:
+        edges = [tuple(map(int, line.replace(';', '').split('->'))) for line in f if '->' in line]
+
+    adjacency_dict = {}
+    for u, v in edges:
+        adjacency_dict.setdefault(u, []).append(v)
+
+    return adjacency_dict
 
 
 def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> list[int]:
