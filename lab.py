@@ -135,7 +135,23 @@ def iterative_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> lis
     >>> iterative_adjacency_dict_dfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
     [0, 1, 2, 3]
     """
-    pass
+    visited = set()
+    stack = [start]
+    traversal = []
+
+    while stack:
+        current = stack.pop()
+        if current in visited:
+            continue
+
+        visited.add(current)
+        traversal.append(current)
+
+        for neighbor in sorted(graph[current], reverse=True):
+            if neighbor not in visited:
+                stack.append(neighbor)
+
+    return traversal
 
 
 def iterative_adjacency_matrix_dfs(graph: list[list], start: int) ->list[int]:
@@ -148,10 +164,27 @@ def iterative_adjacency_matrix_dfs(graph: list[list], start: int) ->list[int]:
     >>> iterative_adjacency_matrix_dfs([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [0, 0, 0, 0]], 0)
     [0, 1, 2, 3]
     """
-    pass
+    visited = set()
+    stack = [start]
+    traversal = []
+
+    while stack:
+        current = stack.pop()
+
+        if current in visited:
+            continue
+
+        visited.add(current)
+        traversal.append(current)
+
+        for neighbor, connected in list(enumerate(graph[current]))[::-1]:
+            if connected and neighbor not in visited:
+                stack.append(neighbor)
+
+    return traversal
 
 
-def recursive_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> list[int]:
+def recursive_adjacency_dict_dfs(graph: dict[int, list[int]], start: int, path=None) -> list[int]:
     """
     :param list[list] graph: the adjacency list of a given graph
     :param int start: start vertex of search
@@ -161,10 +194,19 @@ def recursive_adjacency_dict_dfs(graph: dict[int, list[int]], start: int) -> lis
     >>> recursive_adjacency_dict_dfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
     [0, 1, 2, 3]
     """
-    pass
+    if not path:
+        path = []
 
+    if start not in path:
+        path.append(start)
 
-def recursive_adjacency_matrix_dfs(graph: list[list[int]], start: int) ->list[int]:
+    for neighbor in sorted(graph[start]):
+        if neighbor not in path:
+            recursive_adjacency_dict_dfs(graph, neighbor, path)
+
+    return path
+
+def recursive_adjacency_matrix_dfs(graph: list[list[int]], start: int, path=None) ->list[int]:
     """
     :param dict graph: the adjacency matrix of a given graph
     :param int start: start vertex of search
@@ -174,8 +216,17 @@ def recursive_adjacency_matrix_dfs(graph: list[list[int]], start: int) ->list[in
     >>> recursive_adjacency_matrix_dfs([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [0, 0, 0, 0]], 0)
     [0, 1, 2, 3]
     """
-    pass
+    if not path:
+        path = []
 
+    if start not in path:
+        path.append(start)
+
+    for neighbor, connected in enumerate(graph[start]):
+        if connected and neighbor not in path:
+            recursive_adjacency_matrix_dfs(graph, neighbor, path)
+
+    return path
 
 def iterative_adjacency_dict_bfs(graph: dict[int, list[int]], start: int) -> list[int]:
     """
@@ -201,7 +252,6 @@ def iterative_adjacency_dict_bfs(graph: dict[int, list[int]], start: int) -> lis
                 queue.append(ind)
     return res
 
-
 def iterative_adjacency_matrix_bfs(graph: list[list[int]], start: int) -> list[int]:
     """
     :param dict graph: the adjacency matrix of a given graph
@@ -225,7 +275,6 @@ def iterative_adjacency_matrix_bfs(graph: list[list[int]], start: int) -> list[i
                 visited[i] = True
                 queue.append(i)
     return res
-
 
 def adjacency_matrix_radius(graph: list[list]) -> int:
     """
@@ -261,8 +310,6 @@ def adjacency_matrix_radius(graph: list[list]) -> int:
     eccentricities = [max(bfs_distance(i)) for i in range(len(graph))]
 
     return min(eccentricities)
-
-
 
 def adjacency_dict_radius(graph: dict[int: list[int]]) -> int:
     """
