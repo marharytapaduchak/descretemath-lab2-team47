@@ -74,7 +74,7 @@ def read_adjacency_matrix(filename: str) -> list[list]:
     ...     tmp_path = tmp.name
     >>> read_adjacency_matrix(tmp_path)
     [[0, 1, 1], [1, 0, 1], [1, 1, 0]]
-    >>> os.remove(tmp_path)Зробіть порівняльний аналіз розроблених алгоритмів.
+    >>> os.remove(tmp_path)
     """
     with open(filename, 'r', encoding='utf-8') as f:
         edges = [tuple(map(int, line.replace(';', '').split('->'))) for line in f if '->' in line]
@@ -237,6 +237,8 @@ def iterative_adjacency_dict_bfs(graph: dict[int, list[int]], start: int) -> lis
     [0, 1, 2]
     >>> iterative_adjacency_dict_bfs({0: [1, 2], 1: [0, 2, 3], 2: [0, 1], 3: []}, 0)
     [0, 1, 2, 3]
+    >>> iterative_adjacency_dict_bfs({0: []}, 0)
+    [0]
     """
     visited = [False] * len(graph)
     queue = [start]
@@ -260,7 +262,12 @@ def iterative_adjacency_matrix_bfs(graph: list[list[int]], start: int) -> list[i
     [0, 1, 2]
     >>> iterative_adjacency_matrix_bfs([[0, 1, 1, 0], [1, 0, 1, 1], [1, 1, 0, 0], [0, 0, 0, 0]], 0)
     [0, 1, 2, 3]
+    >>> iterative_adjacency_matrix_bfs([0], 0)
+    [0]
     """
+    if len(graph) <= 1:
+        return graph
+
     visited = [False] * len(graph)
     queue = [start]
     visited[start] = True
