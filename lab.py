@@ -239,9 +239,8 @@ def iterative_adjacency_dict_bfs(graph: dict[int, list[int]], start: int) -> lis
     [0, 1, 2, 3]
     """
     visited = [False] * len(graph)
-    queue = []
+    queue = [start]
     visited[start] = True
-    queue.append(start)
     res = []
     while queue:
         ind_v = queue.pop(0)
@@ -263,9 +262,8 @@ def iterative_adjacency_matrix_bfs(graph: list[list[int]], start: int) -> list[i
     [0, 1, 2, 3]
     """
     visited = [False] * len(graph)
-    queue = []
+    queue = [start]
     visited[start] = True
-    queue.append(start)
     res = []
     while queue:
         ind_v = queue.pop(0)
@@ -292,9 +290,8 @@ def adjacency_matrix_radius(graph: list[list]) -> int:
         """
         visited = [False] * len(graph)
         distance = [float('inf')] * len(graph)
-        queue = []
+        queue = [start]
 
-        queue.append(start)
         visited[start] = True
         distance[start] = 0
 
@@ -328,9 +325,8 @@ def adjacency_dict_radius(graph: dict[int: list[int]]) -> int:
         """
         visited = [False] * len(graph)
         distance = [float('inf')] * len(graph)
-        queue = []
+        queue = [start]
 
-        queue.append(start)
         visited[start] = True
         distance[start] = 0
 
