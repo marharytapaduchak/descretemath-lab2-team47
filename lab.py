@@ -74,7 +74,7 @@ def read_adjacency_matrix(filename: str) -> list[list]:
     ...     tmp_path = tmp.name
     >>> read_adjacency_matrix(tmp_path)
     [[0, 1, 1], [1, 0, 1], [1, 1, 0]]
-    >>> os.remove(tmp_path)
+    >>> os.remove(tmp_path)Зробіть порівняльний аналіз розроблених алгоритмів.
     """
     with open(filename, 'r', encoding='utf-8') as f:
         edges = [tuple(map(int, line.replace(';', '').split('->'))) for line in f if '->' in line]
